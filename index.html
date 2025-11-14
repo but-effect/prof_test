@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профориентация - АО "ПО Бежицкая сталь"</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+            border-radius: 15px;
+            border: 2px solid #444;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ff6b35;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(255, 107, 53, 0.3);
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: #b0b0b0;
+        }
+
+        .welcome-screen, .test-screen, .results-screen {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .welcome-screen.active, .test-screen.active, .results-screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .image-placeholder {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, #3a3a3a 0%, #2a2a2a 100%);
+            border-radius: 10px;
+            border: 2px dashed #555;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 30px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-placeholder::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 107, 53, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .image-placeholder-text {
+            color: #666;
+            font-size: 14px;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .welcome-content {
+            background: #2a2a2a;
+            padding: 40px;
+            border-radius: 15px;
+            border: 1px solid #444;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        .welcome-title {
+            font-size: 24px;
+            color: #ff6b35;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .welcome-text {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #d0d0d0;
+            margin-bottom: 25px;
+            text-align: justify;
+        }
+
+        .instruction {
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #ff6b35;
+            margin-bottom: 30px;
+        }
+
+        .instruction-title {
+            font-weight: bold;
+            color: #ff6b35;
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3);
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 107, 53, 0.5);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-center {
+            display: block;
+            margin: 0 auto;
+        }
+
+        .question-container {
+            background: #2a2a2a;
+            padding: 40px;
+            border-radius: 15px;
+            border: 1px solid #444;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #1a1a1a;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b35 0%, #ff8c42 100%);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px rgba(255, 107, 53, 0.5);
+        }
+
+        .question-number {
+            color: #ff6b35;
+            font-size: 14px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .question-text {
+            font-size: 20px;
+            margin-bottom: 30px;
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+
+        .answer-option {
+            background: #1a1a1a;
+            padding: 18px 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border: 2px solid #333;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .answer-option:hover {
+            border-color: #ff6b35;
+            background: #252525;
+            transform: translateX(5px);
+        }
+
+        .answer-option.selected {
+            border-color: #ff6b35;
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+        }
+
+        .answer-option::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: #ff6b35;
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .answer-option.selected::before {
+            transform: scaleY(1);
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .btn-nav {
+            background: #333;
+            color: white;
+            border: 1px solid #555;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-nav:hover:not(:disabled) {
+            background: #444;
+            border-color: #ff6b35;
+        }
+
+        .btn-nav:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .btn-next {
+            background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+            border: none;
+        }
+
+        .btn-next:hover:not(:disabled) {
+            transform: translateX(3px);
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3);
+        }
+
+        .results-container {
+            background: #2a2a2a;
+            padding: 40px;
+            border-radius: 15px;
+            border: 1px solid #444;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        .results-title {
+            font-size: 28px;
+            color: #ff6b35;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .results-intro {
+            text-align: center;
+            color: #b0b0b0;
+            margin-bottom: 40px;
+            font-size: 16px;
+        }
+
+        .blocks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .block-card {
+            background: #1a1a1a;
+            border: 2px solid #333;
+            border-radius: 12px;
+            padding: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .block-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b35 0%, #ff8c42 100%);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .block-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .block-card:hover {
+            border-color: #ff6b35;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.2);
+        }
+
+        .block-card.top-result {
+            border-color: #ff6b35;
+            box-shadow: 0 0 30px rgba(255, 107, 53, 0.4);
+        }
+
+        .block-card.top-result::before {
+            transform: scaleX(1);
+        }
+
+        .block-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .block-number {
+            font-size: 14px;
+            color: #888;
+            font-weight: bold;
+        }
+
+        .block-score {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff6b35;
+        }
+
+        .block-title {
+            font-size: 18px;
+            color: #e0e0e0;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .block-professions {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            color: #b0b0b0;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .block-card.expanded .block-professions {
+            max-height: 500px;
+            margin-top: 10px;
+            padding-top: 15px;
+            border-top: 1px solid #333;
+        }
+
+        .block-characteristic {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(255, 140, 66, 0.05) 100%);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 15px;
+            font-size: 14px;
+            line-height: 1.7;
+            color: #e0e0e0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .block-characteristic::before {
+            content: '★';
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            color: rgba(255, 107, 53, 0.3);
+        }
+
+        .characteristic-title {
+            font-weight: bold;
+            color: #ff6b35;
+            margin-bottom: 10px;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .expand-indicator {
+            color: #888;
+            font-size: 12px;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .block-card.expanded .expand-indicator::after {
+            content: ' ▲';
+        }
+
+        .block-card:not(.expanded) .expand-indicator::after {
+            content: ' ▼';
+        }
+
+        .recommendation {
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+            padding: 30px;
+            border-radius: 12px;
+            border: 2px solid #ff6b35;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .recommendation-title {
+            font-size: 20px;
+            color: #ff6b35;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .recommendation-text {
+            font-size: 16px;
+            color: #d0d0d0;
+            line-height: 1.8;
+        }
+
+        .btn-restart {
+            margin-top: 30px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 0;
+            }
+
+            .header {
+                padding: 20px 15px;
+                margin-bottom: 20px;
+            }
+
+            .logo {
+                font-size: 22px;
+            }
+
+            .subtitle {
+                font-size: 14px;
+            }
+
+            img[alt] {
+                height: 200px !important;
+                margin: 20px 0 !important;
+            }
+
+            .welcome-content, .question-container, .results-container {
+                padding: 20px 15px;
+            }
+
+            .welcome-title {
+                font-size: 20px;
+            }
+
+            .welcome-text {
+                font-size: 15px;
+                line-height: 1.7;
+            }
+
+            .instruction {
+                padding: 15px;
+                font-size: 15px;
+            }
+
+            .btn {
+                padding: 12px 30px;
+                font-size: 16px;
+                width: 100%;
+            }
+
+            .question-number {
+                font-size: 13px;
+            }
+
+            .question-text {
+                font-size: 17px;
+                margin-bottom: 25px;
+            }
+
+            .answer-option {
+                padding: 15px;
+                font-size: 15px;
+                margin-bottom: 12px;
+            }
+
+            .answer-option:hover {
+                transform: translateX(0);
+            }
+
+            .navigation {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .btn-nav {
+                width: 100%;
+                padding: 12px 20px;
+                font-size: 15px;
+                order: 2;
+            }
+
+            .btn-next {
+                order: 1;
+            }
+
+            #btnPrev {
+                order: 2;
+            }
+
+            .results-title {
+                font-size: 22px;
+                margin-bottom: 20px;
+            }
+
+            .results-intro {
+                font-size: 15px;
+                margin-bottom: 30px;
+            }
+
+            .blocks-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .block-card {
+                padding: 20px;
+            }
+
+            .block-number {
+                font-size: 13px;
+            }
+
+            .block-score {
+                font-size: 20px;
+            }
+
+            .block-title {
+                font-size: 16px;
+            }
+
+            .block-professions {
+                font-size: 13px;
+            }
+
+            .block-characteristic {
+                padding: 15px;
+                font-size: 13px;
+                line-height: 1.6;
+            }
+
+            .characteristic-title {
+                font-size: 12px;
+            }
+
+            .recommendation {
+                padding: 20px 15px;
+            }
+
+            .recommendation-title {
+                font-size: 18px;
+            }
+
+            .recommendation-text {
+                font-size: 15px;
+            }
+
+            .btn-restart {
+                width: 100%;
+            }
+
+            .expand-indicator {
+                font-size: 11px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 20px;
+            }
+
+            .welcome-title {
+                font-size: 18px;
+            }
+
+            .question-text {
+                font-size: 16px;
+            }
+
+            .answer-option {
+                font-size: 14px;
+            }
+
+            .block-title {
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">АО "ПО Бежицкая сталь"</div>
+            <div class="subtitle">Профессиональное ориентирование</div>
+        </div>
+
+        <!-- Welcome Screen -->
+        <div class="welcome-screen active">
+            <img src="workers.png" alt="Сталелитейщики" style="width: 100%; height: 300px; object-fit: cover; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.5);">
+            
+            <div class="welcome-content">
+                <h1 class="welcome-title">Добро пожаловать!</h1>
+                
+                <p class="welcome-text">
+                    Здравствуйте, перед Вами тест на профессиональное ориентирование, исходя из Ваших психологических, когнитивных и поведенческих характеристик. Тест направлен на выявление Вашего отношения к различной степени трудности задачам, факторов стимулирующих их выполнение, типа отношения к работе в коллективе. Цель теста — помочь определить, к какому направлению профессий у Вас есть склонность.
+                </p>
+                
+                <div class="instruction">
+                    <div class="instruction-title">Инструкция:</div>
+                    <div>В каждом вопросе выберите только один вариант ответа — тот, который Вам ближе всего.</div>
+                </div>
+                
+                <button class="btn btn-center" onclick="startTest()">Пройти тестирование</button>
+            </div>
+        </div>
+
+        <!-- Test Screen -->
+        <div class="test-screen">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            
+            <div class="question-container">
+                <div class="question-number" id="questionNumber"></div>
+                <div class="question-text" id="questionText"></div>
+                <div id="answersContainer"></div>
+                
+                <div class="navigation">
+                    <button class="btn-nav" id="btnPrev" onclick="previousQuestion()">← Назад</button>
+                    <button class="btn-nav btn-next" id="btnNext" onclick="nextQuestion()" disabled>Далее →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div class="results-screen">
+            <img src="steel.png" alt="Льющаяся сталь" style="width: 100%; height: 300px; object-fit: cover; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.5);">
+            
+            <div class="results-container">
+                <h1 class="results-title">Результаты тестирования</h1>
+                <p class="results-intro">Ваши результаты по каждому направлению профессий:</p>
+                
+                <div class="blocks-grid" id="blocksGrid"></div>
+                
+                <div class="recommendation" id="recommendation"></div>
+                
+                <button class="btn btn-center btn-restart" onclick="restartTest()">Пройти тест заново</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                text: "Мне больше нравится, когда…",
+                answers: [
+                    { text: "Нужно продумать и рассчитать процесс", block: 1 },
+                    { text: "Работа требует точности и аккуратности", block: 2 },
+                    { text: "Задание простое и понятное, главное — сила и терпение", block: 3 },
+                    { text: "От меня зависит качество и надёжность", block: 4 },
+                    { text: "Я могу руками что-то отрегулировать или наладить", block: 5 }
+                ]
+            },
+            {
+                text: "Как ты относишься к ошибкам в работе?",
+                answers: [
+                    { text: "Как к материалу для анализа — ищу причину", block: 1 },
+                    { text: "Как к сигналу, что нужно быть внимательнее", block: 2 },
+                    { text: "Как к опыту — главное, что сделал сам", block: 3 },
+                    { text: "Как к показателю, что контроль не сработал", block: 4 },
+                    { text: "Как к возможности довести деятельность до ума", block: 5 }
+                ]
+            },
+            {
+                text: "Какой предмет в школе тебе ближе?",
+                answers: [
+                    { text: "Физика, черчение", block: 1 },
+                    { text: "Труд, технология", block: 2 },
+                    { text: "Физкультура", block: 3 },
+                    { text: "Химия, биология", block: 4 },
+                    { text: "Электротехника, информатика", block: 5 }
+                ]
+            },
+            {
+                text: "Когда что-то не получается, ты чаще всего…",
+                answers: [
+                    { text: "Ищешь теоретическую причину", block: 1 },
+                    { text: "Пробуешь другой способ", block: 2 },
+                    { text: "Работаешь, пока не получится", block: 3 },
+                    { text: "Проверяешь, где нарушена последовательность", block: 4 },
+                    { text: "Ищешь, что мешает наладить рабочий процесс", block: 5 }
+                ]
+            },
+            {
+                text: "Когда ты видишь сложную задачу, что тебе хочется сделать в первую очередь?",
+                answers: [
+                    { text: "Разобрать по шагам, как всё устроено", block: 1 },
+                    { text: "Подумать, как лучше действовать на практике", block: 2 },
+                    { text: "Просто начать делать, не откладывая", block: 3 },
+                    { text: "Сначала проверить, есть ли чёткие правила и стандарты", block: 4 },
+                    { text: "Понять, почему что-то не сработало и как это исправить", block: 5 }
+                ]
+            },
+            {
+                text: "Когда что-то идёт не по плану, ты чаще…",
+                answers: [
+                    { text: "Составляешь новый план действий", block: 1 },
+                    { text: "Стараешься изменить способ выполнения", block: 2 },
+                    { text: "Просто берёшься за другое задание", block: 3 },
+                    { text: "Ищешь, где допущена ошибка", block: 4 },
+                    { text: "Приводишь всё в рабочее состояние и двигаешься дальше", block: 5 }
+                ]
+            },
+            {
+                text: "Что тебе ближе по характеру?",
+                answers: [
+                    { text: "Вдумчивость, расчётливость", block: 1 },
+                    { text: "Аккуратность, корректность", block: 2 },
+                    { text: "Выносливость, сила", block: 3 },
+                    { text: "Ответственность, внимательность", block: 4 },
+                    { text: "Надёжность, практичность", block: 5 }
+                ]
+            },
+            {
+                text: "Как ты воспринимаешь порядок и инструкции?",
+                answers: [
+                    { text: "Как основу, на которой строится система", block: 1 },
+                    { text: "Как гарантию точного результата", block: 2 },
+                    { text: "Как ориентир, но не догму", block: 3 },
+                    { text: "Как инструмент для оценки правильности", block: 4 },
+                    { text: "Как подсказку, где может быть ошибка", block: 5 }
+                ]
+            },
+            {
+                text: "Что для тебя важнее в любой деятельности?",
+                answers: [
+                    { text: "Понимать, почему всё устроено именно так", block: 1 },
+                    { text: "Делать стандартно и спокойно", block: 2 },
+                    { text: "Быть вовлечённым и чувствовать движение рабочего процесса", block: 3 },
+                    { text: "Замечать несовпадения и корректировать", block: 4 },
+                    { text: "Обеспечивать стабильную работу вокруг себя", block: 5 }
+                ]
+            },
+            {
+                text: "В коллективе тебе комфортнее, когда...",
+                answers: [
+                    { text: "Каждый понимает логику общей задачи", block: 1 },
+                    { text: "Все работают слаженно", block: 2 },
+                    { text: "Делают, а не спорят", block: 3 },
+                    { text: "Все ориентированы на качество результата", block: 4 },
+                    { text: "Атмосфера спокойная, без суеты", block: 5 }
+                ]
+            },
+            {
+                text: "Что ты чувствуешь, когда получаешь сложное задание?",
+                answers: [
+                    { text: "Вызов — хочется найти лучшее решение", block: 1 },
+                    { text: "Уверенность — главное, всё правильно рассчитать", block: 2 },
+                    { text: "Решимость — просто сделать, без лишних слов", block: 3 },
+                    { text: "Ответственность — нельзя ошибиться", block: 4 },
+                    { text: "Интерес — получится ли устранить проблему", block: 5 }
+                ]
+            },
+            {
+                text: "Как ты относишься к однообразной работе?",
+                answers: [
+                    { text: "Теряешь интерес без новых задач", block: 1 },
+                    { text: "Не обращаешь внимание на рутину", block: 2 },
+                    { text: "Главное, чтобы был результат", block: 3 },
+                    { text: "Используешь это время, чтобы улучшить алгоритм работы", block: 4 },
+                    { text: "Понимаешь, что стабильность — тоже показатель надёжности", block: 5 }
+                ]
+            },
+            {
+                text: "Если бы тебе нужно было выбрать подход к делу, ты бы предпочёл...",
+                answers: [
+                    { text: "Системный — видеть общую картину", block: 1 },
+                    { text: "Аккуратный — внимание к деталям", block: 2 },
+                    { text: "Практичный — главное, чтобы работало", block: 3 },
+                    { text: "Рациональный — всё должно быть под контролем", block: 4 },
+                    { text: "Надёжный — чтобы ничего не подвело", block: 5 }
+                ]
+            },
+            {
+                text: "В команде тебе ближе та роль, где...",
+                answers: [
+                    { text: "Нужно продумывать шаги и связи между ними", block: 1 },
+                    { text: "Можно улучшать и доводить начатое кем-то до ума", block: 2 },
+                    { text: "Нужны решительность и выносливость", block: 3 },
+                    { text: "Требуется замечать отклонения и помогать их избежать", block: 4 },
+                    { text: "Надо поддерживать порядок и согласованность в работе других", block: 5 }
+                ]
+            },
+            {
+                text: "Как ты относишься к неожиданным изменениям в работе или плане?",
+                answers: [
+                    { text: "Воспринимаешь как задачу, где можно найти новое решение", block: 1 },
+                    { text: "Подстраиваешься, выводишь новый алгоритм работы", block: 2 },
+                    { text: "Просто действуешь по ситуации", block: 3 },
+                    { text: "Замечаешь, как изменения повлияли на результат", block: 4 },
+                    { text: "Пытаешься вернуть привычный ритм, чтобы не было сбоев", block: 5 }
+                ]
+            },
+            {
+                text: "Когда работа идёт медленно, ты...",
+                answers: [
+                    { text: "Анализируешь, на каком этапе теряется эффективность", block: 1 },
+                    { text: "Поддерживаешь темп и стараешься не сбиваться", block: 2 },
+                    { text: "Не терпишь медлительности и форсируешь деятельность", block: 3 },
+                    { text: "Берёшь руководство процессом под свой контроль, налаживая темп", block: 4 },
+                    { text: "Помогаешь в кооперации вернуть нормальный ритм", block: 5 }
+                ]
+            }
+        ];
+
+        const blocks = {
+            1: {
+                title: "Технические профессии",
+                professions: "Инженеры, технологи, конструкторы",
+                characteristic: "Ваша голова работает схемами, а не вспышками эмоций. Вы спокойно раскладываете задачу на части, видите взаимосвязи, редко действуете импульсивно. Вам важно, чтобы вещи подчинялись логике, а не хаосу. В коллективе обычно становитесь тем, кто проясняет, что вообще происходит и зачем."
+            },
+            2: {
+                title: "Квалифицированные производственные профессии",
+                professions: "Токари, фрезеровщики, сварщики, операторы станков с ПУ",
+                characteristic: "Вы умеете держать линию: стабильно, ровно, без лишнего драматизма. Вы предпочитаете задачи, где можно сосредоточиться и работать системно. Не любите суету, цените чёткий ритм. В команде становитесь «точкой спокойствия», на которую ориентируются другие."
+            },
+            3: {
+                title: "Неквалифицированные производственные профессии",
+                professions: "Формовщики, обрубщики, стерженщики, сталевары",
+                characteristic: "Вы действуете телом быстрее, чем внутренним голосом. Не боитесь объёма, темпа, нагрузки. Чем проще правила и яснее цель, тем лучше настроение. В коллективе — человек действия: меньше слов, больше результата."
+            },
+            4: {
+                title: "Качество и контроль",
+                professions: "Контролёры ОТК, лаборанты, дефектоскописты",
+                characteristic: "У Вас есть привычка замечать расхождения, даже когда их никто не видит. Нравится сопоставлять, сверять, распутывать несостыковки. В коллективе такой человек становится естественным «радаром»: тихо наблюдает, но фиксирует всё, что идёт не так."
+            },
+            5: {
+                title: "Обслуживание и ремонт",
+                professions: "Слесари-ремонтники, наладчики, электромонтёры",
+                characteristic: "Вы человек, который ощущает «ритм» любой системы — когда что-то сбивается, чувствуете это раньше других. Вам важно, чтобы процессы были устойчивыми, а среда — предсказуемой. В команде обычно играете роль того, кто «поддерживает мир во Вселенной», чтобы ничего не развалилось в самый неподходящий момент."
+            }
+        };
+
+        let currentQuestion = 0;
+        let answers = {};
+        let shuffledQuestions = [];
+
+        function shuffleArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+
+        function startTest() {
+            shuffledQuestions = questions.map(q => ({
+                ...q,
+                answers: shuffleArray(q.answers)
+            }));
+            shuffledQuestions = shuffleArray(shuffledQuestions);
+            
+            document.querySelector('.welcome-screen').classList.remove('active');
+            document.querySelector('.test-screen').classList.add('active');
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const question = shuffledQuestions[currentQuestion];
+            document.getElementById('questionNumber').textContent = `Вопрос ${currentQuestion + 1} из ${shuffledQuestions.length}`;
+            document.getElementById('questionText').textContent = question.text;
+            
+            const answersContainer = document.getElementById('answersContainer');
+            answersContainer.innerHTML = '';
+            
+            question.answers.forEach((answer, index) => {
+                const answerDiv = document.createElement('div');
+                answerDiv.className = 'answer-option';
+                answerDiv.textContent = answer.text;
+                answerDiv.dataset.block = answer.block;
+                answerDiv.dataset.index = index;
+                
+                if (answers[currentQuestion] === index) {
+                    answerDiv.classList.add('selected');
+                }
+                
+                answerDiv.onclick = () => selectAnswer(index, answer.block);
+                answersContainer.appendChild(answerDiv);
+            });
+            
+            updateProgress();
+            updateNavigation();
+        }
+
+        function selectAnswer(index, block) {
+            answers[currentQuestion] = index;
+            
+            document.querySelectorAll('.answer-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            document.querySelector(`[data-index="${index}"]`).classList.add('selected');
+            document.getElementById('btnNext').disabled = false;
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / shuffledQuestions.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        function updateNavigation() {
+            document.getElementById('btnPrev').disabled = currentQuestion === 0;
+            document.getElementById('btnNext').disabled = answers[currentQuestion] === undefined;
+            
+            if (currentQuestion === shuffledQuestions.length - 1 && answers[currentQuestion] !== undefined) {
+                document.getElementById('btnNext').textContent = 'Завершить';
+            } else {
+                document.getElementById('btnNext').textContent = 'Далее →';
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion();
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < shuffledQuestions.length - 1) {
+                currentQuestion++;
+                showQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            const blockScores = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+            
+            Object.keys(answers).forEach(questionIndex => {
+                const answerIndex = answers[questionIndex];
+                const question = shuffledQuestions[questionIndex];
+                const selectedAnswer = question.answers[answerIndex];
+                blockScores[selectedAnswer.block]++;
+            });
+            
+            document.querySelector('.test-screen').classList.remove('active');
+            document.querySelector('.results-screen').classList.add('active');
+            
+            const blocksGrid = document.getElementById('blocksGrid');
+            blocksGrid.innerHTML = '';
+            
+            const maxScore = Math.max(...Object.values(blockScores));
+            
+            Object.keys(blocks).forEach(blockNum => {
+                const score = blockScores[blockNum];
+                const isTop = score === maxScore;
+                
+                const blockCard = document.createElement('div');
+                blockCard.className = 'block-card' + (isTop ? ' top-result' : '');
+                blockCard.onclick = () => blockCard.classList.toggle('expanded');
+                
+                let characteristicHTML = '';
+                if (isTop) {
+                    characteristicHTML = `
+                        <div class="block-characteristic">
+                            <div class="characteristic-title">Ваш психологический портрет</div>
+                            ${blocks[blockNum].characteristic}
+                        </div>
+                    `;
+                }
+                
+                blockCard.innerHTML = `
+                    <div class="block-header">
+                        <div class="block-number">Блок ${blockNum}</div>
+                        <div class="block-score">${score} ${getScoreWord(score)}</div>
+                    </div>
+                    <div class="block-title">${blocks[blockNum].title}</div>
+                    <div class="block-professions">
+                        <strong>Профессии:</strong><br>${blocks[blockNum].professions}
+                        ${characteristicHTML}
+                    </div>
+                    <div class="expand-indicator">Нажмите для подробностей</div>
+                `;
+                
+                blocksGrid.appendChild(blockCard);
+            });
+            
+            const topBlocks = Object.keys(blockScores).filter(k => blockScores[k] === maxScore);
+            const recommendation = document.getElementById('recommendation');
+            
+            if (topBlocks.length === 1) {
+                const topBlock = topBlocks[0];
+                recommendation.innerHTML = `
+                    <div class="recommendation-title">Ваша профессиональная склонность</div>
+                    <div class="recommendation-text">
+                        По результатам тестирования Вам наиболее близок блок <strong>"${blocks[topBlock].title}"</strong>. 
+                        Этот результат указывает на то, что Вам подходят профессии: ${blocks[topBlock].professions.toLowerCase()}.
+                    </div>
+                `;
+            } else {
+                const blocksList = topBlocks.map(b => `"${blocks[b].title}"`).join(' и ');
+                recommendation.innerHTML = `
+                    <div class="recommendation-title">Ваша профессиональная склонность</div>
+                    <div class="recommendation-text">
+                        По результатам тестирования Вам одинаково близки несколько направлений: ${blocksList}. 
+                        Рекомендуем изучить специальности в этих областях более подробно.
+                    </div>
+                `;
+            }
+        }
+
+        function getScoreWord(score) {
+            if (score === 1) return 'балл';
+            if (score >= 2 && score <= 4) return 'балла';
+            return 'баллов';
+        }
+
+        function restartTest() {
+            currentQuestion = 0;
+            answers = {};
+            shuffledQuestions = [];
+            
+            document.querySelector('.results-screen').classList.remove('active');
+            document.querySelector('.welcome-screen').classList.add('active');
+        }
+    </script>
+</body>
+</html>
